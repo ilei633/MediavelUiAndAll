@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+        
+        body { 
+            margin: 0; padding: 0; 
+            background: radial-gradient(circle, rgba(20,20,25,0.95) 0%, rgba(5,5,10,1) 100%), url('https://www.transparenttextures.com/patterns/black-scales.png');
+            color: white; font-family: 'Lato', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; 
+        }
+        .container { 
+            width: 500px; padding: 40px; 
+            background: linear-gradient(135deg, rgba(15,15,20,0.9), rgba(5,5,10,0.95)); 
+            border: 2px solid #d4af37; border-radius: 4px; 
+            box-shadow: 0 0 50px rgba(0,0,0,1), inset 0 0 30px rgba(212, 175, 55, 0.1); 
+        }
+        h1 { 
+            text-align: center; color: #d4af37; margin-top: 0; margin-bottom: 30px; 
+            font-family: 'Cinzel', serif; font-size: 32px; letter-spacing: 3px; 
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); font-weight: bold; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px;
+        }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; color: #aaa; font-family: 'Cinzel', serif; font-weight: bold; letter-spacing: 1px; }
+        input[type="text"], select { 
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.6); 
+            border: 1px solid rgba(212, 175, 55, 0.3); color: white; border-radius: 2px; 
+            box-sizing: border-box; font-family: 'Lato', sans-serif; font-size: 16px; outline: none; transition: 0.3s;
+        }
+        input[type="text"]:focus, select:focus { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+        select option { background: #111; color: white; }
+        
+        button { 
+            width: 100%; padding: 15px; background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), transparent); 
+            border: 1px solid #d4af37; color: #d4af37; font-weight: bold; cursor: pointer; 
+            border-radius: 2px; font-size: 18px; margin-top: 20px; transition: 0.3s; font-family: 'Cinzel', serif; letter-spacing: 2px;
+        }
+        button:hover { background: rgba(212, 175, 55, 0.4); text-shadow: 0 0 8px rgba(212, 175, 55, 0.8); box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aetheria: Ascension</h1>
+        <div class="form-group">
+            <label>Character Name</label>
+            <input type="text" id="charName" placeholder="Enter your legend...">
+        </div>
+        <div class="form-group">
+            <label>Race</label>
+            <select id="charRace">
+                <option value="Human">Human</option>
+                <option value="Elf">Elf</option>
+                <option value="Dwarf">Dwarf</option>
+                <option value="Orc">Orc</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Class</label>
+            <select id="charClass">
+                <option value="Warrior">Warrior</option>
+                <option value="Mage">Mage</option>
+                <option value="Paladin">Paladin</option>
+                <option value="Rogue">Rogue</option>
+                <option value="Assassin">Assassin</option>
+                <option value="Archer">Archer</option>
+            </select>
+        </div>
+        <button onclick="submit()">Begin Journey</button>
+    </div>
+    <script>
+        function submit() {
+            var name = document.getElementById("charName").value;
+            var race = document.getElementById("charRace").value;
+            var cls = document.getElementById("charClass").value;
+            var elm = "None"; // Handled by server
+            if(name.length < 3) { alert("Name must be at least 3 characters."); return; }
+            gmod.SubmitCharacter(name, race, cls, elm);
+        }
+    </script>
+</body>
+</html>
