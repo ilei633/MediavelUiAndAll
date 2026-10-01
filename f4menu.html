@@ -139,12 +139,11 @@
                     <h2>Skill Mastery <span style="font-size: 14px; float: right; margin-top: 8px;">Available SP: <span id="s-sp" style="color: #aa55ff;">0</span></span></h2>
                     
                     <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                        <button style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #fff; cursor: pointer; border-radius: 4px;">Primary Branch</button>
-                        <button style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #555; color: #aaa; cursor: pointer; border-radius: 4px;">Secondary Branch</button>
-                        <button style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #555; cursor: not-allowed; border-radius: 4px;" title="Unlocks at Level 40">Hidden Path рџ”’</button>
-                    </div>
-
-                    <div style="display: flex; gap: 20px; flex-wrap: wrap;" id="skill-tree-container">
+                          <button id="tab-btn-Primary" onclick="setSkillTab('Primary')" style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #d4af37; cursor: pointer; border-radius: 4px; transition: 0.3s;">Primary Branch</button>
+                          <button id="tab-btn-Secondary" onclick="setSkillTab('Secondary')" style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #555; color: #aaa; cursor: pointer; border-radius: 4px; transition: 0.3s;">Secondary Branch</button>
+                          <button id="tab-btn-Hidden" onclick="setSkillTab('Hidden')" style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #555; color: #aaa; cursor: pointer; border-radius: 4px; transition: 0.3s;">Hidden Path</button>
+                      </div>
+                      <div style="display: flex; gap: 20px; flex-wrap: wrap;" id="skill-tree-container">
                         <!-- Skills will be rendered by updateSkills JS function -->
                         <div style="text-align: center; width: 100%; color: #888; margin-top: 50px; font-family: 'Cinzel', serif;">[ Aetheria Skill Matrix Loading ]</div>
                     </div>
@@ -329,31 +328,61 @@
             document.getElementById('clan-members').innerHTML = mHtml;
         }
 
-        function updateSkills(jsonData) {
-            const skills = JSON.parse(jsonData);
-            let html = '';
-            for(let id in skills) {
-                let s = skills[id];
-                let btnHtml = s.unlocked 
-                    ? `<button style="padding: 10px; background: rgba(85,255,85,0.2); border: 1px solid #55ff55; color: #55ff55; border-radius: 4px; cursor: default; margin-top: auto; font-weight: bold; font-family: 'Cinzel', serif;">Unlocked</button>`
-                    : `<button style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #d4af37; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: auto; transition: 0.3s; font-family: 'Cinzel', serif;" onmouseover="this.style.background='rgba(212,175,55,0.5)'" onmouseout="this.style.background='rgba(212,175,55,0.2)'" onclick="gmod.buySkill('${id}')">Learn (${s.cost} SP)</button>`;
-                    
-                let rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
-                
-                html += `
-                    <div class="card" style="width: 250px; background: rgba(10,10,15,0.8); border: 1px solid ${rarityColor}; box-shadow: 0 0 10px ${rarityColor}44; display: flex; flex-direction: column;">
-                        <h3 style="color: ${rarityColor}; margin:0; font-family: 'Cinzel', serif;">${s.name}</h3>
-                        <div style="font-size: 12px; color: ${rarityColor}; margin-bottom: 8px; font-weight: bold;">[${s.rarity}]</div>
-                        <p style="color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">${s.desc}</p>
-                        ${btnHtml}
-                    </div>
-                `;
-            }
-            if (Object.keys(skills).length === 0) {
-                html = '<div style="text-align: center; width: 100%; color: #888; margin-top: 50px; font-family: Cinzel, serif;">No skills available for your class yet.</div>';
-            }
-            document.getElementById('skill-tree-container').innerHTML = html;
-        }
+                  let currentSkillTab = 'Primary';
+          let cachedSkills = {};
+
+          function setSkillTab(tab) {
+              currentSkillTab = tab;
+              
+              // Update button styles
+              ['Primary', 'Secondary', 'Hidden'].forEach(t => {
+                  let btn = document.getElementById('tab-btn-' + t);
+                  if (t === tab) {
+                      btn.style.background = 'rgba(212,175,55,0.2)';
+                      btn.style.borderColor = '#d4af37';
+                      btn.style.color = '#d4af37';
+                  } else {
+                      btn.style.background = 'rgba(0,0,0,0.5)';
+                      btn.style.borderColor = '#555';
+                      btn.style.color = '#aaa';
+                  }
+              });
+              
+              renderSkills();
+          }
+
+          function renderSkills() {
+              let html = '';
+              let count = 0;
+              for(let id in cachedSkills) {
+                  let s = cachedSkills[id];
+                  if (s.branch !== currentSkillTab) continue;
+                  
+                  count++;
+                  let btnHtml = s.unlocked 
+                      ? <button style="padding: 10px; background: rgba(85,255,85,0.2); border: 1px solid #55ff55; color: #55ff55; border-radius: 4px; cursor: default; margin-top: auto; font-weight: bold; font-family: 'Cinzel', serif;">Unlocked</button>
+                      : <button style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #d4af37; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: auto; transition: 0.3s; font-family: 'Cinzel', serif;" onmouseover="this.style.background='rgba(212,175,55,0.5)'" onmouseout="this.style.background='rgba(212,175,55,0.2)'" onclick="gmod.buySkill('+id+')">Learn (+s.cost+ SP)</button>;
+                      
+                  let rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
+                  
+                  html += <div class="card" style="width: 250px; background: rgba(10,10,15,0.8); border: 1px solid +rarityColor+; box-shadow: 0 0 10px +rarityColor+44; display: flex; flex-direction: column;">
+                          <h3 style="color: +rarityColor+; margin:0; font-family: 'Cinzel', serif;">+s.name+</h3>
+                          <div style="font-size: 12px; color: +rarityColor+; margin-bottom: 8px; font-weight: bold;">[+s.rarity+]</div>
+                          <p style="color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">+s.desc+</p>
+                          +btnHtml+
+                      </div>;
+              }
+              if (count === 0) {
+                  html = '<div style="text-align: center; width: 100%; color: #888; margin-top: 50px; font-family: Cinzel, serif;">No skills found in this branch.</div>';
+              }
+              document.getElementById('skill-tree-container').innerHTML = html;
+          }
+
+          function updateSkills(jsonData) {
+              cachedSkills = JSON.parse(jsonData);
+              renderSkills();
+          }
     </script>
 </body>
 </html>
+
