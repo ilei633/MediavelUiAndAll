@@ -66,21 +66,77 @@
     </div>
     
     <script>
+        let activeMenu = null;
+
+        function showAdminMenu(steamid, name, event) {
+            if (activeMenu) activeMenu.remove();
+            
+            let menu = document.createElement('div');
+            menu.style.position = 'absolute';
+            menu.style.background = 'rgba(10, 10, 15, 0.95)';
+            menu.style.border = '1px solid #d4af37';
+            menu.style.padding = '10px';
+            menu.style.borderRadius = '4px';
+            menu.style.left = event.pageX + 'px';
+            menu.style.top = event.pageY + 'px';
+            menu.style.zIndex = 1000;
+            menu.style.display = 'flex';
+            menu.style.flexDirection = 'column';
+            menu.style.gap = '5px';
+            
+            let title = document.createElement('div');
+            title.innerText = 'Admin: ' + name;
+            title.style.color = 'white';
+            title.style.marginBottom = '5px';
+            title.style.fontFamily = 'Cinzel, serif';
+            title.style.borderBottom = '1px dashed #d4af37';
+            title.style.paddingBottom = '5px';
+            menu.appendChild(title);
+            
+            const actions = ['Goto', 'Bring', 'Slay', 'Kick'];
+            for (let a of actions) {
+                let btn = document.createElement('button');
+                btn.innerText = a;
+                btn.style.background = 'rgba(0,0,0,0.5)';
+                btn.style.color = '#d4af37';
+                btn.style.border = '1px solid #555';
+                btn.style.padding = '5px 10px';
+                btn.style.cursor = 'pointer';
+                btn.style.fontFamily = 'Lato, sans-serif';
+                btn.onmouseover = () => btn.style.background = 'rgba(212,175,55,0.2)';
+                btn.onmouseout = () => btn.style.background = 'rgba(0,0,0,0.5)';
+                btn.onclick = () => {
+                    if (typeof gmod !== 'undefined') gmod.adminAction(steamid, a);
+                    menu.remove();
+                };
+                menu.appendChild(btn);
+            }
+            
+            document.body.appendChild(menu);
+            activeMenu = menu;
+            event.stopPropagation();
+        }
+        
+        document.body.onclick = () => {
+            if (activeMenu) { activeMenu.remove(); activeMenu = null; }
+        };
+
         function updatePlayers(jsonData) {
             const players = JSON.parse(jsonData);
             let html = '';
             for(let p of players) {
-                html += `
-                    <tr>
-                        <td class="player-name">${p.name}</td>
-                        <td class="level">${p.lvl}</td>
-                        <td style="color: #aaa;">${p.cls}</td>
-                        <td class="ping">${p.ping} ms</td>
+                html += 
+                    <tr onclick="showAdminMenu('+p.steamid+', '+p.name+', event)" style="cursor: pointer;">
+                        <td class="player-name">+p.name+</td>
+                        <td class="level">+p.lvl+</td>
+                        <td style="color: #aaa;">+p.cls+</td>
+                        <td class="ping">+p.ping+ ms</td>
                     </tr>
-                `;
+                ;
             }
             document.getElementById('player-list').innerHTML = html;
         }
-    </script>
+</script>
 </body>
 </html>
+
