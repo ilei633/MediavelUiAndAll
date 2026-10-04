@@ -93,7 +93,7 @@
     <div class="container">
         <div class="header">
             <h1>AETHERIA: PLAYER HUB</h1>
-            <div class="close-btn" onclick="gmod.closeMenu()">Г—</div>
+            <div class="close-btn" onclick="gmod.closeMenu()">Р“вЂ”</div>
         </div>
         <div class="content-area">
             <div class="sidebar">
@@ -212,7 +212,7 @@
             document.getElementById('c-class').innerText = cls;
             document.getElementById('c-race').innerText = race;
             document.getElementById('c-element').innerText = element;
-            document.getElementById('c-money').innerText = 'в‚і ' + money;
+            document.getElementById('c-money').innerText = 'РІвЂљС– ' + money;
             
             document.getElementById('c-hp').innerText = hp;
             document.getElementById('c-armor').innerText = armor;
@@ -258,17 +258,17 @@
             document.getElementById('quest-list').innerHTML = html;
         }
 
-        function updateInventory(jsonData) {
+                function updateInventory(jsonData) {
             const items = JSON.parse(jsonData);
             let html = '';
             for(let i of items) {
                 // Determine icon based on basic rules or fallback
-                let icon = 'рџ“¦';
-                if (i.item_class.includes('sword') || i.item_class.includes('weapon')) icon = 'вљ”пёЏ';
-                if (i.item_class.includes('potion')) icon = 'рџ§Є';
-                if (i.item_class.includes('armor')) icon = 'рџ›ЎпёЏ';
-                if (i.item_class.includes('ring')) icon = 'рџ’Ќ';
-                if (i.item_class.includes('crystal')) icon = 'рџ’Ћ';
+                let icon = '📦';
+                if (i.item_class.includes('sword') || i.item_class.includes('weapon')) icon = '⚔️';
+                if (i.item_class.includes('potion')) icon = '🧪';
+                if (i.item_class.includes('armor')) icon = '🛡️';
+                if (i.item_class.includes('ring')) icon = '💍';
+                if (i.item_class.includes('crystal')) icon = '💎';
 
                 html += `
                     <div class="inv-slot" title="LMB: Use | RMB: Drop" onclick="gmod.useItem('${i.id}', '${i.item_class}')" oncontextmenu="gmod.dropItem('${i.id}', '${i.item_class}'); return false;">
@@ -391,4 +391,5 @@
     </script>
 </body>
 </html>
+
 
