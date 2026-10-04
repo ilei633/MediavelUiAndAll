@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -365,12 +365,18 @@
                       
                   let rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
                   
-                  html += <div class="card" style="width: 250px; background: rgba(10,10,15,0.8); border: 1px solid +rarityColor+; box-shadow: 0 0 10px +rarityColor+44; display: flex; flex-direction: column;">
-                          <h3 style="color: +rarityColor+; margin:0; font-family: 'Cinzel', serif;">+s.name+</h3>
-                          <div style="font-size: 12px; color: +rarityColor+; margin-bottom: 8px; font-weight: bold;">[+s.rarity+]</div>
-                          <p style="color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">+s.desc+</p>
-                          +btnHtml+
-                      </div>;
+                  let iconHtml = '';
+                  if (s.icon && s.icon !== "") {
+                      iconHtml = '<img src="asset://garrysmod/materials/' + s.icon + '.vmt" style="width: 48px; height: 48px; margin-bottom: 10px; border-radius: 4px; object-fit: contain;">';
+                  }
+
+                  html += '<div class="card" style="width: 250px; background: rgba(10,10,15,0.8); border: 1px solid ' + rarityColor + '; box-shadow: 0 0 10px ' + rarityColor + '44; display: flex; flex-direction: column;">' +
+                          iconHtml +
+                          '<h3 style="color: ' + rarityColor + '; margin:0; font-family: \'Cinzel\', serif;">' + s.name + '</h3>' +
+                          '<div style="font-size: 12px; color: ' + rarityColor + '; margin-bottom: 8px; font-weight: bold;">[' + s.rarity + ']</div>' +
+                          '<p style="color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">' + s.desc + '</p>' +
+                          btnHtml +
+                      '</div>';
               }
               if (count === 0) {
                   html = '<div style="text-align: center; width: 100%; color: #888; margin-top: 50px; font-family: Cinzel, serif;">No skills found in this branch.</div>';
