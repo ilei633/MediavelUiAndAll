@@ -360,8 +360,8 @@
                   
                   count++;
                   let btnHtml = s.unlocked 
-                      ? <button style="padding: 10px; background: rgba(85,255,85,0.2); border: 1px solid #55ff55; color: #55ff55; border-radius: 4px; cursor: default; margin-top: auto; font-weight: bold; font-family: 'Cinzel', serif;">Unlocked</button>
-                      : <button style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #d4af37; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: auto; transition: 0.3s; font-family: 'Cinzel', serif;" onmouseover="this.style.background='rgba(212,175,55,0.5)'" onmouseout="this.style.background='rgba(212,175,55,0.2)'" onclick="gmod.buySkill('+id+')">Learn (+s.cost+ SP)</button>;
+                      ? '<button style="padding: 10px; background: rgba(85,255,85,0.2); border: 1px solid #55ff55; color: #55ff55; border-radius: 4px; cursor: default; margin-top: auto; font-weight: bold; font-family: \'Cinzel\', serif;">Unlocked</button>'
+                      : '<button style="padding: 10px; background: rgba(212,175,55,0.2); border: 1px solid #d4af37; color: #d4af37; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: auto; transition: 0.3s; font-family: \'Cinzel\', serif;" onmouseover="this.style.background=\'rgba(212,175,55,0.5)\'" onmouseout="this.style.background=\'rgba(212,175,55,0.2)\'" onclick="gmod.buySkill(\''+id+'\')">Learn ('+s.cost+' SP)</button>';
                       
                   let rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
                   
