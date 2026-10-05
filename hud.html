@@ -1,102 +1,198 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Metamorphous&family=Rosarivo&display=swap');
         
-        body { margin: 0; overflow: hidden; font-family: 'Lato', sans-serif; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
+        body {
+            margin: 0; padding: 0; overflow: hidden;
+            font-family: 'Rosarivo', serif;
+            color: #ecf0f1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
         
         .hud-container {
-            position: absolute; bottom: 30px; left: 30px;
-            display: flex; align-items: flex-end; gap: 20px;
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
         }
 
-        .avatar-frame {
-            width: 100px; height: 100px;
+        .level-orb {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b, #332200);
             border-radius: 50%;
-            border: 3px solid #d4af37;
-            background: rgba(10, 10, 15, 0.9);
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(0,0,0,0.8);
-            position: relative; display: flex; justify-content: center; align-items: center;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(255,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
-        .level-badge {
-            position: absolute; bottom: -10px;
-            background: linear-gradient(135deg, #b8860b, #ffd700);
-            color: #111; font-family: 'Cinzel', serif; font-weight: bold; font-size: 16px;
-            padding: 3px 12px; border-radius: 10px; border: 1px solid #fff; text-shadow: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        .level-orb span {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px #000, 0 0 10px rgba(0,0,0,0.5);
+            line-height: 1;
+        }
+
+        .level-orb .lvl-text {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #ffe066;
+            text-transform: uppercase;
         }
 
         .bars-container {
-            display: flex; flex-direction: column; gap: 8px; width: 350px; margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-bottom: 10px;
+            width: 350px;
         }
-
-        .info-panel {
-            position: absolute; top: -45px; left: 0;
-            display: flex; gap: 15px; font-family: 'Cinzel', serif; font-size: 18px; color: #d4af37; white-space: nowrap;
-        }
-        
-        .currency { color: #ffaa00; font-weight: bold; }
 
         .bar-bg {
-            background: rgba(10, 10, 15, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 4px; height: 22px; position: relative; overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            background: rgba(10, 10, 15, 0.85);
+            border: 2px solid #3e3e3e;
+            border-radius: 3px;
+            height: 22px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+            overflow: hidden;
         }
 
-        .health-fill { height: 100%; background: linear-gradient(90deg, #8b0000, #ff3333); width: 100%; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(255,51,51,0.5); }
-        .mana-fill { height: 100%; background: linear-gradient(90deg, #00008b, #3366ff); width: 100%; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(51,102,255,0.5); }
-        .exp-fill { height: 100%; background: linear-gradient(90deg, #b8860b, #ffd700); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-        
-        .bar-text { position: absolute; width: 100%; text-align: center; top: 1px; color: white; font-weight: bold; font-size: 14px; }
+        .bar-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease-out;
+            position: relative;
+        }
+
+        .bar-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            font-family: 'Metamorphous', cursive;
+            line-height: 22px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .hp-fill { background: linear-gradient(90deg, #8b0000, #ff3333); box-shadow: 0 0 10px rgba(255,0,0,0.5); }
+        .mana-fill { background: linear-gradient(90deg, #00008b, #3366ff); box-shadow: 0 0 10px rgba(0,100,255,0.5); }
+        .exp-fill { background: linear-gradient(90deg, #4b0082, #9932cc); box-shadow: 0 0 10px rgba(150,0,255,0.5); }
+
+        .player-info {
+            position: absolute;
+            bottom: 130px;
+            left: 120px;
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .player-info .class-badge {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .gold-container {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(10, 10, 15, 0.85);
+            border: 2px solid #d4af37;
+            border-radius: 4px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            color: #ffd700;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .gold-icon {
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.8);
+        }
+
     </style>
 </head>
 <body>
+    <div class="player-info">
+        <span id="p-name">Traveler</span>
+        <span class="class-badge" id="p-class">None</span>
+    </div>
+
     <div class="hud-container">
-        <div class="avatar-frame">
-            <span style="font-family: 'Cinzel', serif; color: #d4af37; font-size: 40px; text-shadow: none;">A</span>
-            <div class="level-badge" id="hud-level">1</div>
+        <div class="level-orb">
+            <span id="p-lvl">1</span>
+            <div class="lvl-text">LEVEL</div>
         </div>
+        
         <div class="bars-container">
-            <div class="info-panel">
-                <span id="hud-name">Aetherian</span> | 
-                <span id="hud-class">Novice</span> | 
-                <span class="currency">₳ <span id="hud-money">0</span></span>
-            </div>
-            
             <div class="bar-bg">
-                <div class="health-fill" id="hp-fill"></div>
+                <div class="bar-fill hp-fill" id="hp-fill"></div>
                 <div class="bar-text" id="hp-text">100 / 100</div>
             </div>
-            
             <div class="bar-bg">
-                <div class="mana-fill" id="mp-fill"></div>
-                <div class="bar-text" id="mp-text">100 / 100</div>
+                <div class="bar-fill mana-fill" id="mana-fill"></div>
+                <div class="bar-text" id="mana-text">50 / 50</div>
             </div>
-            
-            <div class="bar-bg" style="height: 6px; border-radius: 2px;">
-                <div class="exp-fill" id="exp-fill"></div>
+            <div class="bar-bg" style="height: 12px; margin-top: 5px; border-color: #5a2e8c;">
+                <div class="bar-fill exp-fill" id="exp-fill"></div>
             </div>
         </div>
     </div>
-    
+
+    <div class="gold-container">
+        <span class="gold-icon">🪙</span>
+        <span id="p-gold">0</span>
+    </div>
+
     <script>
-        function updateHUD(hp, maxHp, mana, maxMana, money, name, lvl, cls, exp, maxExp) {
-            document.getElementById('hp-fill').style.width = Math.max(0, Math.min(100, (hp / maxHp) * 100)) + '%';
-            document.getElementById('hp-text').innerText = hp + ' / ' + maxHp;
-            
-            document.getElementById('mp-fill').style.width = Math.max(0, Math.min(100, (mana / maxMana) * 100)) + '%';
-            document.getElementById('mp-text').innerText = mana + ' / ' + maxMana;
-            
-            let expPct = (exp / maxExp) * 100;
-            document.getElementById('exp-fill').style.width = Math.max(0, Math.min(100, expPct)) + '%';
-            
-            document.getElementById('hud-money').innerText = money;
-            document.getElementById('hud-name').innerText = name;
-            document.getElementById('hud-level').innerText = lvl;
-            document.getElementById('hud-class').innerText = cls;
+        function updateHUD(name, lvl, cls, hp, maxhp, mana, maxmana, exp, maxexp, gold) {
+            document.getElementById('p-name').innerText = name;
+            document.getElementById('p-lvl').innerText = lvl;
+            document.getElementById('p-class').innerText = cls;
+            document.getElementById('p-gold').innerText = new Intl.NumberFormat().format(gold);
+
+            document.getElementById('hp-text').innerText = hp + ' / ' + maxhp;
+            document.getElementById('hp-fill').style.width = Math.max(0, Math.min(100, (hp / maxhp) * 100)) + '%';
+
+            document.getElementById('mana-text').innerText = mana + ' / ' + maxmana;
+            document.getElementById('mana-fill').style.width = Math.max(0, Math.min(100, (mana / maxmana) * 100)) + '%';
+
+            document.getElementById('exp-fill').style.width = Math.max(0, Math.min(100, (exp / maxexp) * 100)) + '%';
         }
     </script>
 </body>
