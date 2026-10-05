@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <style>
@@ -16,7 +16,7 @@
 
         .board {
             width: 800px; max-height: 80vh;
-            background: rgba(15, 15, 20, 0.85);
+            background: rgba(15, 15, 20, 0.9);
             border: 2px solid #d4af37;
             border-radius: 8px;
             box-shadow: 0 0 40px rgba(0,0,0,1), inset 0 0 20px rgba(212,175,55,0.1);
@@ -34,7 +34,7 @@
             margin: 0;
             font-family: 'Cinzel', serif;
             color: #d4af37;
-            font-size: 36px;
+            font-size: 34px;
             letter-spacing: 4px;
             text-shadow: 0 0 15px rgba(212,175,55,0.5);
         }
@@ -67,11 +67,10 @@
         .row:hover {
             background: rgba(212,175,55,0.1);
             border-color: rgba(212,175,55,0.3);
-            transform: scale(1.01);
         }
 
         .col { flex: 1; text-align: center; font-size: 16px; }
-        .col.name { flex: 2; text-align: left; font-weight: bold; color: #fff; font-size: 18px; }
+        .col.name { flex: 2; text-align: left; font-weight: bold; color: #fff; font-size: 17px; }
         
         .col.class-badge {
             color: #d4af37;
@@ -113,34 +112,36 @@
                 <div class="col">Class</div>
                 <div class="col">Ping</div>
             </div>
-            <div id="player-list">
-                <!-- Players inserted here -->
-            </div>
+            <div id="player-list"></div>
         </div>
     </div>
 
     <script>
         function updatePlayers(jsonData) {
-            const players = JSON.parse(jsonData);
-            
-            // Sort by level descending
-            players.sort((a, b) => b.lvl - a.lvl);
-            
-            document.getElementById('player-count').innerText = players.length + " Player" + (players.length !== 1 ? "s" : "") + " Online";
+            try {
+                var players = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                players.sort(function(a, b) { return (b.lvl || 0) - (a.lvl || 0); });
+                
+                var countEl = document.getElementById('player-count');
+                if (countEl) countEl.innerText = players.length + " Player" + (players.length !== 1 ? "s" : "") + " Online";
 
-            let html = '';
-            for(let p of players) {
-                let pingColor = p.ping < 50 ? '#55ff55' : (p.ping < 120 ? '#ffff55' : '#ff5555');
-                html += 
-                    <div class="row">
-                        <div class="col name"></div>
-                        <div class="col" style="color: #ffe066; font-weight: bold;"></div>
-                        <div class="col class-badge"></div>
-                        <div class="col ping" style="color: "> ms</div>
-                    </div>
-                ;
+                var html = '';
+                for (var i = 0; i < players.length; i++) {
+                    var p = players[i];
+                    var ping = p.ping || 0;
+                    var pingColor = ping < 50 ? '#55ff55' : (ping < 120 ? '#ffff55' : '#ff5555');
+                    html += '<div class="row">' +
+                        '<div class="col name">' + (p.name || "Unknown") + '</div>' +
+                        '<div class="col" style="color: #ffe066; font-weight: bold;">' + (p.lvl || 1) + '</div>' +
+                        '<div class="col class-badge">' + (p.cls || "None") + '</div>' +
+                        '<div class="col ping" style="color: ' + pingColor + '">' + ping + ' ms</div>' +
+                    '</div>';
+                }
+                var listEl = document.getElementById('player-list');
+                if (listEl) listEl.innerHTML = html;
+            } catch(e) {
+                console.error("Scoreboard parse error:", e);
             }
-            document.getElementById('player-list').innerHTML = html;
         }
     </script>
 </body>

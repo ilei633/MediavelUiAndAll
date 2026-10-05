@@ -1,26 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
         
+        * { box-sizing: border-box; }
+
         body {
             margin: 0; padding: 0; 
             font-family: 'Lato', sans-serif;
             color: #eee;
-            background: rgba(10, 10, 15, 0.85);
+            background: rgba(10, 10, 15, 0.88);
             backdrop-filter: blur(10px);
             display: flex;
             height: 100vh; overflow: hidden;
+            user-select: none;
         }
 
         .sidebar {
-            width: 280px;
+            width: 260px;
             background: rgba(5, 5, 8, 0.95);
             border-right: 2px solid #d4af37;
-            box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+            box-shadow: 5px 0 25px rgba(0,0,0,0.8);
             display: flex; flex-direction: column;
-            padding: 30px 0;
+            padding: 25px 0;
             z-index: 10;
         }
 
@@ -28,11 +32,11 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             color: #d4af37;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             letter-spacing: 3px;
             text-shadow: 0 0 15px rgba(212,175,55,0.5);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-bottom: 1px solid rgba(212,175,55,0.2);
             padding-bottom: 20px;
         }
@@ -41,41 +45,42 @@
             background: transparent;
             border: none;
             color: #aaa;
-            padding: 15px 30px;
+            padding: 14px 28px;
             text-align: left;
-            font-size: 18px;
+            font-size: 16px;
             font-family: 'Cinzel', serif;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
             position: relative;
+            outline: none;
         }
 
-        .nav-btn:hover { color: #fff; background: rgba(212,175,55,0.1); padding-left: 40px; }
+        .nav-btn:hover { color: #fff; background: rgba(212,175,55,0.1); padding-left: 36px; }
         
         .nav-btn.active {
             color: #d4af37;
             background: rgba(212,175,55,0.15);
             font-weight: bold;
             border-left: 4px solid #d4af37;
-            padding-left: 36px;
+            padding-left: 32px;
         }
 
         .content-area {
             flex: 1;
-            padding: 40px;
+            padding: 35px;
             overflow-y: auto;
             position: relative;
         }
 
-        .tab-content { display: none; animation: fadeIn 0.3s ease-out; }
-        .tab-content.active { display: block; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.25s ease-out; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Panels */
         .panel {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.55);
             border: 1px solid rgba(212,175,55,0.3);
             border-radius: 8px;
             padding: 25px;
@@ -89,17 +94,18 @@
             border-bottom: 2px solid rgba(212,175,55,0.3);
             padding-bottom: 10px;
             margin-top: 0;
+            font-size: 24px;
         }
 
         /* Inventory Grid */
         .inv-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
             gap: 15px;
         }
 
         .inv-slot {
-            background: linear-gradient(135deg, rgba(30,30,40,0.9), rgba(15,15,20,0.9));
+            background: linear-gradient(135deg, rgba(25,25,35,0.9), rgba(15,15,20,0.9));
             border: 1px solid #555;
             border-radius: 6px;
             aspect-ratio: 1;
@@ -107,12 +113,13 @@
             justify-content: center; align-items: center;
             cursor: pointer; transition: 0.2s;
             position: relative;
+            padding: 5px;
         }
 
         .inv-slot:hover { border-color: #d4af37; transform: scale(1.05); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
-        .inv-icon { font-size: 32px; margin-bottom: 5px; }
+        .inv-icon { font-size: 32px; margin-bottom: 4px; }
         .inv-amount { position: absolute; bottom: 5px; right: 8px; font-weight: bold; color: #d4af37; font-size: 12px; }
-        .inv-name { font-size: 10px; color: #aaa; text-align: center; text-transform: capitalize; padding: 0 5px; }
+        .inv-name { font-size: 11px; color: #aaa; text-align: center; text-transform: capitalize; word-break: break-word; line-height: 1.1; }
 
         /* Skills Grid */
         .skills-grid {
@@ -127,17 +134,16 @@
             border-radius: 8px;
             padding: 20px;
             display: flex; flex-direction: column;
-            transition: 0.3s;
+            transition: 0.2s;
         }
         
-        .skill-card:hover { border-color: #d4af37; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
-        .skill-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .skill-icon img { width: 50px; height: 50px; border-radius: 4px; border: 1px solid #d4af37; }
-        .skill-title { font-family: 'Cinzel', serif; font-size: 20px; color: #fff; margin:0; }
-        .skill-desc { font-size: 14px; color: #aaa; flex: 1; line-height: 1.5; margin-bottom: 15px; }
+        .skill-card:hover { border-color: #d4af37; box-shadow: 0 0 15px rgba(212,175,55,0.2); }
+        .skill-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .skill-title { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; margin: 0; }
+        .skill-desc { font-size: 13px; color: #aaa; flex: 1; line-height: 1.4; margin-bottom: 15px; }
         
         .btn {
-            background: rgba(212,175,55,0.1);
+            background: rgba(212,175,55,0.15);
             border: 1px solid #d4af37;
             color: #d4af37;
             padding: 10px 15px;
@@ -148,16 +154,15 @@
             transition: 0.2s;
             text-align: center;
         }
-        .btn:hover { background: rgba(212,175,55,0.3); box-shadow: 0 0 10px rgba(212,175,55,0.4); }
+        .btn:hover { background: rgba(212,175,55,0.35); box-shadow: 0 0 10px rgba(212,175,55,0.4); }
         .btn.unlocked { background: rgba(85,255,85,0.1); border-color: #55ff55; color: #55ff55; cursor: default; }
-        .btn.unlocked:hover { box-shadow: none; background: rgba(85,255,85,0.1); }
 
         /* Stats List */
         .stat-row {
             display: flex; justify-content: space-between;
             padding: 12px 15px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 18px;
+            font-size: 17px;
         }
         .stat-label { color: #aaa; font-family: 'Cinzel', serif; }
         .stat-val { color: #d4af37; font-weight: bold; }
@@ -180,7 +185,7 @@
         <button class="nav-btn" onclick="switchTab('tab-guild', this)">Guild</button>
         
         <div style="flex:1;"></div>
-        <button class="nav-btn" style="color: #ff5555; border:none;" onclick="gmod.closeMenu()">Close Menu</button>
+        <button class="nav-btn" style="color: #ff5555; border:none;" onclick="if(window.gmod) gmod.closeMenu()">Close Menu</button>
     </div>
 
     <div class="content-area">
@@ -203,10 +208,8 @@
         <div id="tab-inventory" class="tab-content">
             <h2 class="title">Inventory</h2>
             <div class="panel">
-                <p style="color: #888; font-size: 14px; margin-top: 0;">LMB: Use / Equip &nbsp;|&nbsp; RMB: Drop Item</p>
-                <div class="inv-grid" id="inv-grid">
-                    <!-- Populated via JS -->
-                </div>
+                <p style="color: #888; font-size: 13px; margin-top: 0;">ЛКМ: Использовать / Экипировать &nbsp;|&nbsp; ПКМ: Выбросить</p>
+                <div class="inv-grid" id="inv-grid"></div>
             </div>
         </div>
 
@@ -219,18 +222,14 @@
                     <button class="btn" id="sbtn-Secondary" onclick="setSkillTab('Secondary')" style="border-color: #555; color: #aaa;">Secondary Branch</button>
                     <button class="btn" id="sbtn-Hidden" onclick="setSkillTab('Hidden')" style="border-color: #555; color: #aaa;">Hidden Path</button>
                 </div>
-                <div class="skills-grid" id="skill-tree-container">
-                    <!-- Populated via JS -->
-                </div>
+                <div class="skills-grid" id="skill-tree-container"></div>
             </div>
         </div>
 
         <!-- QUESTS -->
         <div id="tab-quests" class="tab-content">
             <h2 class="title">Active Quests</h2>
-            <div class="panel" id="quest-list">
-                <!-- Populated via JS -->
-            </div>
+            <div class="panel" id="quest-list"></div>
         </div>
 
         <!-- GUILD -->
@@ -240,7 +239,7 @@
                 <p style="color: #aaa;">You are not in a guild.</p>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <input type="text" id="clan-create-name" placeholder="Guild Name..." style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #d4af37; color: white; border-radius: 4px; flex: 1; outline:none; font-family: 'Lato', sans-serif;">
-                    <button class="btn" onclick="gmod.createClan(document.getElementById('clan-create-name').value)">Found Guild (50k 🪙)</button>
+                    <button class="btn" onclick="if(window.gmod) gmod.createClan(document.getElementById('clan-create-name').value)">Found Guild (50k 🪙)</button>
                 </div>
             </div>
             <div class="panel" id="clan-active" style="display: none;">
@@ -248,7 +247,6 @@
                 <div class="stat-row"><span class="stat-label">Rating</span><span class="stat-val" id="c-clan-rating">1000</span></div>
                 <div class="stat-row"><span class="stat-label">Influence</span><span class="stat-val" id="c-clan-influence">0</span></div>
                 <div class="stat-row"><span class="stat-label">Vault Gold</span><span class="stat-val" id="c-clan-gold">0 🪙</span></div>
-                
                 <h3 style="color: #aaa; font-family: 'Cinzel', serif; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 10px;">Members</h3>
                 <div id="clan-members"></div>
             </div>
@@ -258,169 +256,192 @@
 
     <script>
         function switchTab(tabId, el) {
-            document.querySelectorAll('.nav-btn').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            var tabs = document.querySelectorAll('.nav-btn');
+            for (var i = 0; i < tabs.length; i++) { tabs[i].classList.remove('active'); }
+            
+            var contents = document.querySelectorAll('.tab-content');
+            for (var j = 0; j < contents.length; j++) { contents[j].classList.remove('active'); }
+            
+            if (el) el.classList.add('active');
+            var target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
         }
 
         function updateProfile(name, lvl, cls, race, element, money, maxhp, armor, exp, sp) {
-            document.getElementById('c-name').innerText = name;
-            document.getElementById('c-level').innerText = lvl;
-            document.getElementById('c-class').innerText = cls;
-            document.getElementById('c-race').innerText = race;
-            document.getElementById('c-element').innerText = element;
-            document.getElementById('c-money').innerText = new Intl.NumberFormat().format(money) + ' 🪙';
-            document.getElementById('c-sp').innerText = sp;
+            var elName = document.getElementById('c-name'); if (elName) elName.innerText = name || "Unknown";
+            var elLvl = document.getElementById('c-level'); if (elLvl) elLvl.innerText = lvl || 1;
+            var elCls = document.getElementById('c-class'); if (elCls) elCls.innerText = cls || "None";
+            var elRace = document.getElementById('c-race'); if (elRace) elRace.innerText = race || "Human";
+            var elElem = document.getElementById('c-element'); if (elElem) elElem.innerText = element || "None";
+            var elMoney = document.getElementById('c-money'); if (elMoney) elMoney.innerText = (new Intl.NumberFormat().format(money || 0)) + ' 🪙';
+            var elSp = document.getElementById('c-sp'); if (elSp) elSp.innerText = sp || 0;
         }
 
         function updateInventory(jsonData) {
-            const items = JSON.parse(jsonData);
-            let html = '';
-            for(let i of items) {
-                let icon = '📦';
-                let ic = i.item_class.toLowerCase();
-                if (ic.includes('sword') || ic.includes('weapon') || ic.includes('bow') || ic.includes('staff')) icon = '⚔️';
-                else if (ic.includes('potion')) icon = '🧪';
-                else if (ic.includes('armor') || ic.includes('shield')) icon = '🛡️';
-                else if (ic.includes('ring')) icon = '💍';
-                else if (ic.includes('crystal')) icon = '💎';
-                else if (ic.includes('magic')) icon = '✨';
+            try {
+                var items = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                var html = '';
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    var icon = '📦';
+                    var ic = (item.item_class || '').toLowerCase();
+                    if (ic.indexOf('sword') !== -1 || ic.indexOf('weapon') !== -1 || ic.indexOf('bow') !== -1 || ic.indexOf('staff') !== -1) icon = '⚔️';
+                    else if (ic.indexOf('potion') !== -1) icon = '🧪';
+                    else if (ic.indexOf('armor') !== -1 || ic.indexOf('shield') !== -1) icon = '🛡️';
+                    else if (ic.indexOf('ring') !== -1) icon = '💍';
+                    else if (ic.indexOf('crystal') !== -1) icon = '💎';
+                    else if (ic.indexOf('magic') !== -1) icon = '✨';
 
-                html += 
-                    <div class="inv-slot" title="LMB: Use | RMB: Drop" onclick="gmod.useItem('', '')" oncontextmenu="gmod.dropItem('', ''); return false;">
-                        <div class="inv-icon"></div>
-                        <div class="inv-name"></div>
-                        <div class="inv-amount">x</div>
-                    </div>
-                ;
+                    var displayName = (item.item_class || '').replace('aetheria_', '').replace(/_/g, ' ');
+                    var safeId = item.id || 0;
+                    var safeClass = item.item_class || '';
+
+                    html += '<div class="inv-slot" title="LMB: Use | RMB: Drop" onclick="if(window.gmod) gmod.useItem(\'' + safeId + '\', \'' + safeClass + '\')" oncontextmenu="if(window.gmod) gmod.dropItem(\'' + safeId + '\', \'' + safeClass + '\'); return false;">' +
+                        '<div class="inv-icon">' + icon + '</div>' +
+                        '<div class="inv-name">' + displayName + '</div>' +
+                        '<div class="inv-amount">x' + (item.amount || 1) + '</div>' +
+                    '</div>';
+                }
+                if (items.length === 0) {
+                    html = '<p style="color: #666; grid-column: 1 / -1; text-align: center; margin-top: 40px;">Your inventory is empty.</p>';
+                }
+                var grid = document.getElementById('inv-grid');
+                if (grid) grid.innerHTML = html;
+            } catch(e) {
+                console.error("Inventory error:", e);
             }
-            if (items.length === 0) {
-                html = '<p style="color: #666; grid-column: 1 / -1; text-align: center; margin-top: 40px;">Your inventory is empty.</p>';
-            }
-            document.getElementById('inv-grid').innerHTML = html;
         }
 
-        let currentSkillTab = 'Primary';
-        let cachedSkills = {};
+        var currentSkillTab = 'Primary';
+        var cachedSkills = {};
 
         function setSkillTab(tab) {
             currentSkillTab = tab;
-            ['Primary', 'Secondary', 'Hidden'].forEach(t => {
-                let btn = document.getElementById('sbtn-' + t);
-                if (t === tab) {
-                    btn.style.background = 'rgba(212,175,55,0.3)';
-                    btn.style.borderColor = '#d4af37';
-                    btn.style.color = '#d4af37';
-                } else {
-                    btn.style.background = 'transparent';
-                    btn.style.borderColor = '#555';
-                    btn.style.color = '#aaa';
+            var tabs = ['Primary', 'Secondary', 'Hidden'];
+            for (var i = 0; i < tabs.length; i++) {
+                var t = tabs[i];
+                var btn = document.getElementById('sbtn-' + t);
+                if (btn) {
+                    if (t === tab) {
+                        btn.style.background = 'rgba(212,175,55,0.3)';
+                        btn.style.borderColor = '#d4af37';
+                        btn.style.color = '#d4af37';
+                    } else {
+                        btn.style.background = 'transparent';
+                        btn.style.borderColor = '#555';
+                        btn.style.color = '#aaa';
+                    }
                 }
-            });
+            }
             renderSkills();
         }
 
         function renderSkills() {
-            let html = '';
-            let count = 0;
-            for(let id in cachedSkills) {
-                let s = cachedSkills[id];
+            var html = '';
+            var count = 0;
+            for (var id in cachedSkills) {
+                var s = cachedSkills[id];
                 if (s.branch !== currentSkillTab) continue;
                 count++;
                 
-                let btnHtml = s.unlocked 
-                    ? <div class="btn unlocked">Unlocked</div>
-                    : <div class="btn" onclick="gmod.buySkill('')">Learn ( SP)</div>;
+                var btnHtml = s.unlocked 
+                    ? '<div class="btn unlocked">Unlocked</div>'
+                    : '<div class="btn" onclick="if(window.gmod) gmod.buySkill(\'' + id + '\')">Learn (' + s.cost + ' SP)</div>';
                     
-                let rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
+                var rarityColor = s.rarity === 'Legendary' ? '#ff55ff' : (s.rarity === 'Epic' ? '#aa55ff' : (s.rarity === 'Super Rare' ? '#5555ff' : (s.rarity === 'Rare' ? '#55ff55' : '#fff')));
                 
-                let iconHtml = '';
-                if (s.icon && s.icon !== "") {
-                    iconHtml = <div class="skill-icon"><img src="asset://garrysmod/materials/.vmt" onerror="this.style.display='none'"></div>;
-                }
-
-                html += 
-                    <div class="skill-card" style="border-color: 44;">
-                        <div class="skill-header">
-                            
-                            <div>
-                                <h3 class="skill-title" style="color: ;"></h3>
-                                <div style="font-size: 12px; color: ; font-weight: bold;">[]</div>
-                            </div>
-                        </div>
-                        <div class="skill-desc"></div>
-                        
-                    </div>
-                ;
+                html += '<div class="skill-card" style="border-color: ' + rarityColor + '44;">' +
+                    '<div class="skill-header">' +
+                        '<div>' +
+                            '<h3 class="skill-title" style="color: ' + rarityColor + ';">' + s.name + '</h3>' +
+                            '<div style="font-size: 12px; color: ' + rarityColor + '; font-weight: bold;">[' + s.rarity + ']</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="skill-desc">' + s.desc + '</div>' +
+                    btnHtml +
+                '</div>';
             }
             if (count === 0) {
                 html = '<p style="color: #666; grid-column: 1 / -1; text-align: center; margin-top: 40px;">No skills in this branch.</p>';
             }
-            document.getElementById('skill-tree-container').innerHTML = html;
+            var container = document.getElementById('skill-tree-container');
+            if (container) container.innerHTML = html;
         }
 
         function updateSkills(jsonData) {
-            cachedSkills = JSON.parse(jsonData);
-            renderSkills();
+            try {
+                cachedSkills = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                renderSkills();
+            } catch(e) {
+                console.error("Skills error:", e);
+            }
         }
 
         function updateQuests(jsonData) {
-            const quests = JSON.parse(jsonData);
-            let html = '';
-            for(let q of quests) {
-                let status = q.completed ? '<span style="color: #55ff55;">Completed</span>' : ${q.progress} / 10;
-                html += 
-                    <div style="background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; border-left: 4px solid #d4af37; border-radius: 4px;">
-                        <h3 style="margin: 0 0 10px 0; color: #d4af37; font-family: 'Cinzel', serif;"></h3>
-                        <div style="display: flex; justify-content: space-between; color: #aaa;">
-                            <span>Progress</span>
-                            <span style="font-weight: bold; color: #fff;"></span>
-                        </div>
-                    </div>
-                ;
+            try {
+                var quests = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                var html = '';
+                for (var i = 0; i < quests.length; i++) {
+                    var q = quests[i];
+                    var status = q.completed ? '<span style="color: #55ff55;">Completed</span>' : (q.progress || 0) + ' / 10';
+                    var title = (q.quest_id || '').replace(/_/g, ' ').toUpperCase();
+                    html += '<div style="background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; border-left: 4px solid #d4af37; border-radius: 4px;">' +
+                        '<h3 style="margin: 0 0 10px 0; color: #d4af37; font-family: \'Cinzel\', serif;">' + title + '</h3>' +
+                        '<div style="display: flex; justify-content: space-between; color: #aaa;">' +
+                            '<span>Progress</span>' +
+                            '<span style="font-weight: bold; color: #fff;">' + status + '</span>' +
+                        '</div>' +
+                    '</div>';
+                }
+                if (quests.length === 0) {
+                    html = '<p style="color: #666; text-align: center; margin-top: 40px;">No active quests.</p>';
+                }
+                var qList = document.getElementById('quest-list');
+                if (qList) qList.innerHTML = html;
+            } catch(e) {
+                console.error("Quests error:", e);
             }
-            if(quests.length === 0) {
-                html = '<p style="color: #666; text-align: center; margin-top: 40px;">No active quests.</p>';
-            }
-            document.getElementById('quest-list').innerHTML = html;
         }
 
         function updateClan(jsonData) {
-            let clanActive = document.getElementById('clan-active');
-            let clanNoClan = document.getElementById('clan-no-clan');
-            if (!jsonData || jsonData === "{}" || jsonData === "") {
-                clanActive.style.display = 'none';
-                clanNoClan.style.display = 'block';
-                return;
-            }
-            const clan = JSON.parse(jsonData);
-            if (Object.keys(clan).length === 0) {
-                clanActive.style.display = 'none';
-                clanNoClan.style.display = 'block';
-                return;
-            }
-            clanNoClan.style.display = 'none';
-            clanActive.style.display = 'block';
-            
-            document.getElementById('c-clan-name').innerText = clan.name || "Unknown Guild";
-            document.getElementById('c-clan-rating').innerText = clan.rating || 1000;
-            document.getElementById('c-clan-influence').innerText = clan.influence || 0;
-            document.getElementById('c-clan-gold').innerText = new Intl.NumberFormat().format(clan.bank_money || 0) + ' 🪙';
-            
-            let mHtml = '';
-            if (clan.members) {
-                for (let m of clan.members) {
-                    let rColor = m.role === 'Leader' ? '#d4af37' : (m.role === 'Officer' ? '#55ff55' : '#aaa');
-                    mHtml += 
-                        <div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <span style="color: #eee;"></span>
-                            <span style="color: ; font-weight: bold; font-family: 'Cinzel', serif;"></span>
-                        </div>
-                    ;
+            try {
+                var clanActive = document.getElementById('clan-active');
+                var clanNoClan = document.getElementById('clan-no-clan');
+                if (!jsonData || jsonData === "{}" || jsonData === "") {
+                    if (clanActive) clanActive.style.display = 'none';
+                    if (clanNoClan) clanNoClan.style.display = 'block';
+                    return;
                 }
+                var clan = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                if (!clan || Object.keys(clan).length === 0) {
+                    if (clanActive) clanActive.style.display = 'none';
+                    if (clanNoClan) clanNoClan.style.display = 'block';
+                    return;
+                }
+                if (clanNoClan) clanNoClan.style.display = 'none';
+                if (clanActive) clanActive.style.display = 'block';
+                
+                var cName = document.getElementById('c-clan-name'); if (cName) cName.innerText = clan.name || "Unknown Guild";
+                var cRat = document.getElementById('c-clan-rating'); if (cRat) cRat.innerText = clan.rating || 1000;
+                var cInf = document.getElementById('c-clan-influence'); if (cInf) cInf.innerText = clan.influence || 0;
+                var cGold = document.getElementById('c-clan-gold'); if (cGold) cGold.innerText = (new Intl.NumberFormat().format(clan.bank_money || 0)) + ' 🪙';
+                
+                var mHtml = '';
+                if (clan.members) {
+                    for (var j = 0; j < clan.members.length; j++) {
+                        var m = clan.members[j];
+                        var rColor = m.role === 'Leader' ? '#d4af37' : (m.role === 'Officer' ? '#55ff55' : '#aaa');
+                        mHtml += '<div style="display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">' +
+                            '<span style="color: #eee;">' + (m.steamid || 'Unknown') + '</span>' +
+                            '<span style="color: ' + rColor + '; font-weight: bold; font-family: \'Cinzel\', serif;">' + (m.role || 'Member') + '</span>' +
+                        '</div>';
+                    }
+                }
+                var mList = document.getElementById('clan-members');
+                if (mList) mList.innerHTML = mHtml;
+            } catch(e) {
+                console.error("Clan error:", e);
             }
-            document.getElementById('clan-members').innerHTML = mHtml;
         }
     </script>
 </body>
