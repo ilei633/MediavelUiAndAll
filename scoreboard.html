@@ -4,139 +4,144 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
         
-        body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Lato', sans-serif; overflow: hidden; }
-        .container { 
-            width: 70%; height: 80%; 
-            background: linear-gradient(135deg, rgba(15, 15, 20, 0.95), rgba(5, 5, 10, 0.98)); 
-            border: 2px solid #d4af37; border-radius: 4px; 
-            box-shadow: 0 0 50px rgba(0,0,0,1), inset 0 0 30px rgba(212, 175, 55, 0.1); 
-            display: flex; flex-direction: column; overflow: hidden; 
+        body {
+            margin: 0; padding: 0; 
+            font-family: 'Lato', sans-serif;
+            color: #eee;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
         }
-        .header { 
-            background: linear-gradient(90deg, rgba(30, 25, 20, 0.9), rgba(15, 15, 20, 0.9)); 
-            padding: 20px; text-align: center; border-bottom: 2px solid #d4af37; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+
+        .board {
+            width: 800px; max-height: 80vh;
+            background: rgba(15, 15, 20, 0.85);
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,0,0,1), inset 0 0 20px rgba(212,175,55,0.1);
+            display: flex; flex-direction: column;
         }
-        .header h1 { 
-            margin: 0; color: #d4af37; font-family: 'Cinzel', serif; font-size: 34px; 
-            letter-spacing: 3px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); font-weight: bold; 
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(212,175,55,0.3);
+            background: linear-gradient(180deg, rgba(212,175,55,0.15) 0%, transparent 100%);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-family: 'Cinzel', serif;
+            color: #d4af37;
+            font-size: 36px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px rgba(212,175,55,0.5);
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            color: #aaa;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .table-container {
+            overflow-y: auto;
+            padding: 10px 20px 20px 20px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 4px;
+            transition: 0.2s;
+            align-items: center;
+        }
+
+        .row:hover {
+            background: rgba(212,175,55,0.1);
+            border-color: rgba(212,175,55,0.3);
+            transform: scale(1.01);
+        }
+
+        .col { flex: 1; text-align: center; font-size: 16px; }
+        .col.name { flex: 2; text-align: left; font-weight: bold; color: #fff; font-size: 18px; }
+        
+        .col.class-badge {
+            color: #d4af37;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
         }
         
-        .table-container { flex: 1; overflow-y: auto; padding: 20px; background: url('https://www.transparenttextures.com/patterns/black-scales.png'); }
-        table { width: 100%; border-collapse: collapse; color: white; }
-        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.1); }
-        th { 
-            background: rgba(0,0,0,0.5); color: #d4af37; font-family: 'Cinzel', serif; 
-            text-transform: uppercase; font-size: 16px; position: sticky; top: 0; letter-spacing: 1px;
+        .col.ping { color: #55ff55; font-family: monospace; font-size: 14px; }
+
+        .row-header {
+            background: transparent;
+            border: none;
+            color: #d4af37;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            pointer-events: none;
         }
-        tr { transition: 0.2s; }
-        tr:nth-child(even) { background: rgba(0,0,0,0.2); }
-        tr:hover { background: rgba(212, 175, 55, 0.15); transform: scale(1.01); box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        
-        .ping { color: #55ff55; font-weight: bold; text-shadow: 0 0 5px rgba(85,255,85,0.3); }
-        .level { color: #5555ff; font-weight: bold; text-shadow: 0 0 5px rgba(85,85,255,0.3); }
-        .player-name { font-weight: bold; font-family: 'Cinzel', serif; letter-spacing: 1px; font-size: 18px; }
-        
+
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.4); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.8); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffe066; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="board">
         <div class="header">
-            <h1>AETHERIA: ASCENSION</h1>
+            <h1>Aetheria Realm</h1>
+            <p id="player-count">0 Players Online</p>
         </div>
         <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Player Name</th>
-                        <th>Level</th>
-                        <th>Class</th>
-                        <th>Ping</th>
-                    </tr>
-                </thead>
-                <tbody id="player-list">
-                    <!-- Players inserted here -->
-                </tbody>
-            </table>
+            <div class="row row-header">
+                <div class="col name">Adventurer</div>
+                <div class="col">Level</div>
+                <div class="col">Class</div>
+                <div class="col">Ping</div>
+            </div>
+            <div id="player-list">
+                <!-- Players inserted here -->
+            </div>
         </div>
     </div>
-    
+
     <script>
-        let activeMenu = null;
-
-        function showAdminMenu(steamid, name, event) {
-            if (activeMenu) activeMenu.remove();
-            
-            let menu = document.createElement('div');
-            menu.style.position = 'absolute';
-            menu.style.background = 'rgba(10, 10, 15, 0.95)';
-            menu.style.border = '1px solid #d4af37';
-            menu.style.padding = '10px';
-            menu.style.borderRadius = '4px';
-            menu.style.left = event.pageX + 'px';
-            menu.style.top = event.pageY + 'px';
-            menu.style.zIndex = 1000;
-            menu.style.display = 'flex';
-            menu.style.flexDirection = 'column';
-            menu.style.gap = '5px';
-            
-            let title = document.createElement('div');
-            title.innerText = 'Admin: ' + name;
-            title.style.color = 'white';
-            title.style.marginBottom = '5px';
-            title.style.fontFamily = 'Cinzel, serif';
-            title.style.borderBottom = '1px dashed #d4af37';
-            title.style.paddingBottom = '5px';
-            menu.appendChild(title);
-            
-            const actions = ['Goto', 'Bring', 'Slay', 'Kick'];
-            for (let a of actions) {
-                let btn = document.createElement('button');
-                btn.innerText = a;
-                btn.style.background = 'rgba(0,0,0,0.5)';
-                btn.style.color = '#d4af37';
-                btn.style.border = '1px solid #555';
-                btn.style.padding = '5px 10px';
-                btn.style.cursor = 'pointer';
-                btn.style.fontFamily = 'Lato, sans-serif';
-                btn.onmouseover = () => btn.style.background = 'rgba(212,175,55,0.2)';
-                btn.onmouseout = () => btn.style.background = 'rgba(0,0,0,0.5)';
-                btn.onclick = () => {
-                    if (typeof gmod !== 'undefined') gmod.adminAction(steamid, a);
-                    menu.remove();
-                };
-                menu.appendChild(btn);
-            }
-            
-            document.body.appendChild(menu);
-            activeMenu = menu;
-            event.stopPropagation();
-        }
-        
-        document.body.onclick = () => {
-            if (activeMenu) { activeMenu.remove(); activeMenu = null; }
-        };
-
         function updatePlayers(jsonData) {
             const players = JSON.parse(jsonData);
+            
+            // Sort by level descending
+            players.sort((a, b) => b.lvl - a.lvl);
+            
+            document.getElementById('player-count').innerText = players.length + " Player" + (players.length !== 1 ? "s" : "") + " Online";
+
             let html = '';
             for(let p of players) {
+                let pingColor = p.ping < 50 ? '#55ff55' : (p.ping < 120 ? '#ffff55' : '#ff5555');
                 html += 
-                    <tr onclick="showAdminMenu('+p.steamid+', '+p.name+', event)" style="cursor: pointer;">
-                        <td class="player-name">+p.name+</td>
-                        <td class="level">+p.lvl+</td>
-                        <td style="color: #aaa;">+p.cls+</td>
-                        <td class="ping">+p.ping+ ms</td>
-                    </tr>
+                    <div class="row">
+                        <div class="col name"></div>
+                        <div class="col" style="color: #ffe066; font-weight: bold;"></div>
+                        <div class="col class-badge"></div>
+                        <div class="col ping" style="color: "> ms</div>
+                    </div>
                 ;
             }
             document.getElementById('player-list').innerHTML = html;
         }
-</script>
+    </script>
 </body>
 </html>
-
